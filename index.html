@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WebGL Water</title>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+  <script src="OES_texture_float_linear-polyfill.js"></script>
+  <script src="lightgl.js"></script>
+  <script src="cubemap.js"></script>
+  <script src="stanford-bunny.js"></script>
+  <script src="renderer.js"></script>
+  <script src="water.js"></script>
+  <script src="main.js"></script>
+
+  <style>
+    :root{
+      --panel-bg: rgba(18, 18, 20, 0.55);
+      --panel-border: rgba(255, 255, 255, 0.10);
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.62);
+      --btn-bg: rgba(255,255,255,0.10);
+      --btn-bg-hover: rgba(255,255,255,0.16);
+      --btn-bg-active: rgba(255,255,255,0.22);
+      --shadow: 0 18px 60px rgba(0,0,0,0.55);
+      --radius: 16px;
+    }
+
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background: #000;
+      color: var(--text);
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    canvas { position: absolute; inset: 0; }
+
+    /* Assets */
+    img { display: none; }
+
+    /* Loading */
+    #loading {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      pointer-events: none;
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 0.2px;
+    }
+
+    /* Panel */
+    #help {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      width: 290px;
+      max-width: calc(100vw - 32px);
+      padding: 14px 14px 12px;
+      border-radius: var(--radius);
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      user-select: none;
+    }
+
+    .title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 0 0 10px 0;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: 0.2px;
+    }
+    .pill {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--panel-border);
+      color: var(--muted);
+      background: rgba(255,255,255,0.06);
+    }
+
+    .section { margin-top: 10px; }
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin: 10px 0 6px;
+    }
+    .label {
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.1px;
+    }
+    .value {
+      font-variant-numeric: tabular-nums;
+      font-size: 12px;
+      color: var(--text);
+      opacity: 0.9;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      margin: 0;
+      accent-color: #fff;
+    }
+
+    .btn {
+      appearance: none;
+      -webkit-appearance: none;
+      border: 1px solid var(--panel-border);
+      background: var(--btn-bg);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 10px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.15px;
+      cursor: pointer;
+      transition: background 120ms ease, transform 120ms ease;
+    }
+    .btn:hover { background: var(--btn-bg-hover); }
+    .btn:active { background: var(--btn-bg-active); transform: translateY(1px); }
+
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .segmented {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .footer {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+    .hint { opacity: 0.85; }
+    .kbd {
+      border: 1px solid var(--panel-border);
+      background: rgba(255,255,255,0.06);
+      padding: 2px 6px;
+      border-radius: 8px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    @media (max-width: 520px) {
+      #help { width: 260px; }
+      .btn { padding: 9px 10px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="loading">Loading…</div>
+
+  <div id="help">
+    <div class="title">
+      <span>Controls</span>
+      <span class="pill">WebGL</span>
+    </div>
+
+    <div class="section">
+      <div class="row">
+        <div class="label">Fluidity</div>
+        <div class="value"><span id="fluidity-value">1.00</span></div>
+      </div>
+      <input id="fluidity-slider" type="range" min="0" max="1" step="0.01" value="1" />
+    </div>
+
+    <div class="section">
+      <div class="row">
+        <div class="label">Density</div>
+        <div class="value"><span id="sphere-density-value">1.00</span></div>
+      </div>
+      <input id="sphere-density-slider" type="range" min="0.2" max="3.0" step="0.1" value="1.0" />
+    </div>
+
+    <div class="section">
+      <button id="calm-button" class="btn" style="width:100%;">Calm</button>
+    </div>
+
+    <div class="section grid2">
+      <button id="add-ball-button" class="btn" title="Add ball (max 3)">Add</button>
+      <button id="remove-ball-button" class="btn" title="Remove ball (min 1)">Remove</button>
+    </div>
+
+    <div class="section segmented">
+      <button id="shape-sphere-button" class="btn">Sphere</button>
+      <button id="shape-bunny-button" class="btn">Bunny</button>
+    </div>
+
+    <div class="footer">
+      <span class="hint"><span class="kbd">Space</span> pause</span>
+      <span class="hint"><span class="kbd">G</span> gravity</span>
+      <span class="hint"><span class="kbd">L</span> light</span>
+    </div>
+  </div>
+
+  <!-- Textures -->
+  <img id="tiles" src="tiles.jpg">
+  <img id="wallTiles" src="wall.jpg">
+  <img id="xneg" src="xneg.jpg">
+  <img id="xpos" src="xpos.jpg">
+  <img id="ypos" src="ypos.jpg">
+  <img id="zneg" src="zneg.jpg">
+  <img id="zpos" src="zpos.jpg">
+</body>
+</html>
