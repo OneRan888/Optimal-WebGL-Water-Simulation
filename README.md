@@ -77,6 +77,7 @@ This is the final project for Computer Vision (CS440) at Macau University of Sci
 ---
 
 ## 🗂 Project Structure
+```
 .
 ├── index.html
 ├── main.js
@@ -87,13 +88,14 @@ This is the final project for Computer Vision (CS440) at Macau University of Sci
 ├── stanford-bunny.js
 ├── OES_texture_float_linear-polyfill.js
 ├── tiles.jpg       
-├── wall.jpg        
+├── wall.jpg       
 ├── xneg.jpg
 ├── xpos.jpg
 ├── ypos.jpg
 ├── zneg.jpg
 ├── zpos.jpg
 └── README.md
+```
 
 ---
 
