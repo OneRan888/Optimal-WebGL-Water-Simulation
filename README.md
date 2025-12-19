@@ -6,13 +6,13 @@ Built on top of Evan Wallace’s classic **WebGL Water** demo and extended with 
 This is the final project for Computer Vision (CS440) at Macau University of Science and Technology, which is supervised by Prof. Huang Zhizhong.
 
 ## 👥 Team Members
-| Name       | Student ID | Division of Labor |
-|------------|------------||------------|
-| Sun Yiran  | 1220009338 | System Architecture & Core Rendering and Integration |
-| Zhang Haozhan      | 1220017576 | Performance Evaluation & Limitations & Future |
-| Liu Benhuang    | 1220004875 | Simulation Derivation & Parameter Experiments |
-| Xu Bowen   | 1220012282 | Interaction & UI |
-| Xu Yanxi | 1230023419 | Caustics & Shadows |
+| Name         | Student ID | Division of Labor                              |
+|--------------|------------|------------------------------------------------|
+| Sun Yiran    | 1220009338 | System Architecture & Core Rendering and Integration |
+| Zhang Haozhan| 1220017576 | Performance Evaluation & Limitations & Future Outlook |
+| Liu Benhuang | 1220004875 | Simulation Derivation & Parameter Experiments   |
+| Xu Bowen     | 1220012282 | Interaction & UI                               |
+| Xu Yanxi     | 1230023419 | Caustics & Shadows                             |
 
 ---
 
