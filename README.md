@@ -9,7 +9,7 @@ This is the final project for Computer Vision (CS440) at Macau University of Sci
 | Name         | Student ID | Division of Labor                              |
 |--------------|------------|------------------------------------------------|
 | Sun Yiran    | 1220009338 | System Architecture & Core Rendering and Integration |
-| Zhang Haozhan| 1220017576 | Performance Evaluation & Limitations & Future Outlook |
+| Zhang Haozhan| 1220017576 | Performance Evaluation |
 | Liu Benhuang | 1220004875 | Simulation Derivation & Parameter Experiments   |
 | Xu Bowen     | 1220012282 | Interaction & UI                               |
 | Xu Yanxi     | 1230023419 | Caustics & Shadows                             |
